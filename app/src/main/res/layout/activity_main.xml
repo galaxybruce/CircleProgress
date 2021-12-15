@@ -121,9 +121,11 @@
             app:antiAlias="true"
             app:arcWidth="2dp"
             app:arcColors="@array/gradient_arc_color"
-            app:haloRadius="20dp"
+            app:haloRadius="0dp"
             app:bgArcColor="@color/colorAccent"
-            app:bgArcWidth="@dimen/small" />
+            app:bgArcWidth="@dimen/small"
+            app:shine="false"
+            />
 
     </LinearLayout>
 </ScrollView>

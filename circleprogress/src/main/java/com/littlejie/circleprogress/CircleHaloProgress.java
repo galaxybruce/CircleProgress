@@ -44,6 +44,7 @@ public class CircleHaloProgress extends View {
     //绘制光晕
     private Paint mBgArcPaint;
     private float mHaloRadius;
+    private boolean mShine;
 
     //圆心坐标，半径
     private Point mCenterPoint;
@@ -72,6 +73,7 @@ public class CircleHaloProgress extends View {
         antiAlias = typedArray.getBoolean(R.styleable.CircleHaloProgressBar_antiAlias, Constant.ANTI_ALIAS);
         mArcWidth = typedArray.getDimension(R.styleable.CircleHaloProgressBar_arcWidth, Constant.DEFAULT_ARC_WIDTH);
         mHaloRadius = typedArray.getDimension(R.styleable.CircleHaloProgressBar_haloRadius, 10);
+        mShine = typedArray.getBoolean(R.styleable.CircleHaloProgressBar_shine, false);
 
         int gradientArcColors = typedArray.getResourceId(R.styleable.CircleHaloProgressBar_arcColors, 0);
         if (gradientArcColors != 0) {
@@ -151,16 +153,20 @@ public class CircleHaloProgress extends View {
             mSweepGradient.setLocalMatrix(mMatrix);
         }
 
-        mAlpha = mAlpha - 5 * mAlphaReverse;
-        if(mAlpha == 0 || mAlpha == 255) {
-            mAlphaReverse = mAlphaReverse * -1;
+        if(mShine) {
+            mAlpha = mAlpha - 5 * mAlphaReverse;
+            if (mAlpha == 0 || mAlpha == 255) {
+                mAlphaReverse = mAlphaReverse * -1;
+            }
+            mArcPaint.setAlpha(mAlpha);
         }
-        mArcPaint.setAlpha(mAlpha);
         postInvalidateDelayed(10);
     }
 
     private void drawArc(Canvas canvas) {
-        canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, mRadius - mArcWidth, mBgArcPaint);
+        if(mHaloRadius > 0) {
+            canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, mRadius - mArcWidth, mBgArcPaint);
+        }
         canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, mRadius, mArcPaint);
     }
 
@@ -173,7 +179,9 @@ public class CircleHaloProgress extends View {
         mArcPaint.setShader(mSweepGradient);
 
         mBgArcPaint.setShader(mSweepGradient);
-        mBgArcPaint.setMaskFilter(new BlurMaskFilter(mHaloRadius, BlurMaskFilter.Blur.OUTER));
+        if(mHaloRadius > 0) {
+            mBgArcPaint.setMaskFilter(new BlurMaskFilter(mHaloRadius, BlurMaskFilter.Blur.OUTER));
+        }
     }
 
     public boolean isAntiAlias() {

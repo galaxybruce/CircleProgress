@@ -145,6 +145,9 @@
         <attr name="antiAlias" />
         <attr name="arcWidth" />
         <attr name="arcColors" />
+        <!-- 光晕长度 -->
         <attr name="haloRadius" format="dimension" />
+        <!-- 是否显示浅色水波 -->
+        <attr name="shine" format="boolean" />
     </declare-styleable>
 </resources>
