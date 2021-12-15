@@ -18,3 +18,4 @@ Android 自定义圆形进度条，包括传统传统的圆形(CircleProgress)�
 2. [手把手带你画一个 时尚仪表盘 Android 自定义View](https://www.kancloud.cn/digest/wingscustomview/129803)
 3. [Android波纹进度条 轻松地让它浪起来](https://blog.csdn.net/dapangzao/article/details/77712997)
 4. [Android - 绘制带有渐变色的折线图](https://www.jianshu.com/p/58c839d867e1)
+5. [Android自定义-曲线渐变填充](https://juejin.cn/post/6925703843099443213)
