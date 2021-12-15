@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
@@ -39,6 +40,8 @@ public class CircleHaloProgress extends View {
     private float mArcWidth;
     private SweepGradient mSweepGradient;
     private int[] mGradientColors = {Color.GREEN, Color.YELLOW, Color.GREEN};
+    private Matrix mMatrix = new Matrix();
+    private int startAngle = 0;
 
     //绘制光晕
     private Paint mBgArcPaint;
@@ -146,6 +149,14 @@ public class CircleHaloProgress extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawArc(canvas);
+
+        startAngle = ++startAngle % 360;
+        if(mSweepGradient != null) {
+            mMatrix.setRotate(startAngle, mCenterPoint.x, mCenterPoint.y);
+            mSweepGradient.setLocalMatrix(mMatrix);
+        }
+
+        postInvalidateDelayed(10);
     }
 
     private void drawArc(Canvas canvas) {
