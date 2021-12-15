@@ -49,8 +49,6 @@ public class CircleHaloProgress extends View {
     private Point mCenterPoint;
     private float mRadius;
 
-    //动画时间
-    private long mAnimTime;
     //属性动画
     private ValueAnimator mAnimator;
 
@@ -74,7 +72,6 @@ public class CircleHaloProgress extends View {
         antiAlias = typedArray.getBoolean(R.styleable.CircleHaloProgressBar_antiAlias, Constant.ANTI_ALIAS);
         mArcWidth = typedArray.getDimension(R.styleable.CircleHaloProgressBar_arcWidth, Constant.DEFAULT_ARC_WIDTH);
         mHaloRadius = typedArray.getDimension(R.styleable.CircleHaloProgressBar_haloRadius, 10);
-        mAnimTime = typedArray.getInt(R.styleable.CircleHaloProgressBar_animTime, Constant.DEFAULT_ANIM_TIME);
 
         int gradientArcColors = typedArray.getResourceId(R.styleable.CircleHaloProgressBar_arcColors, 0);
         if (gradientArcColors != 0) {

@@ -143,7 +143,6 @@
     <!-- 圆形进度条 -->
     <declare-styleable name="CircleHaloProgressBar">
         <attr name="antiAlias" />
-        <attr name="animTime" />
         <attr name="arcWidth" />
         <attr name="arcColors" />
         <attr name="haloRadius" format="dimension" />
