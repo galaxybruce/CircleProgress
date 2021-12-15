@@ -5,6 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#AA000000"
     tools:context="com.littlejie.app.MainActivity">
 
     <LinearLayout
@@ -111,6 +112,18 @@
             app:valueSize="@dimen/text_size_35"
             app:waveHeight="30dp"
             app:waveNum="1" />
+
+        <com.littlejie.circleprogress.CircleHaloProgress
+            android:id="@+id/circle_progress_bar0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:antiAlias="true"
+            app:arcWidth="2dp"
+            app:arcColors="@array/gradient_arc_color"
+            app:haloRadius="20dp"
+            app:bgArcColor="@color/colorAccent"
+            app:bgArcWidth="@dimen/small" />
 
     </LinearLayout>
 </ScrollView>

@@ -7,13 +7,14 @@
     <color name="dark">#803cbcb7</color>
     <color name="light">#800de6e8</color>
 
-    <color name="green">#00FF00</color>
-    <color name="blue">#EE9A00</color>
-    <color name="red">#EE0000</color>
+    <color name="green">#8000FF00</color>
+    <color name="blue">#80EE9A00</color>
+    <color name="yellow">#80ffff00</color>
+    <color name="red">#80EE0000</color>
 
     <integer-array name="gradient_arc_color">
         <item>@color/green</item>
-        <item>@color/blue</item>
-        <item>@color/red</item>
+        <item>@color/yellow</item>
+        <item>@color/green</item>
     </integer-array>
 </resources>
