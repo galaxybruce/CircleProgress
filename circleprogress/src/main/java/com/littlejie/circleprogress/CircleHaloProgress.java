@@ -10,12 +10,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.RectF;
 import android.graphics.SweepGradient;
-import android.graphics.Typeface;
-import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.littlejie.circleprogress.utils.Constant;
@@ -41,7 +37,9 @@ public class CircleHaloProgress extends View {
     private SweepGradient mSweepGradient;
     private int[] mGradientColors = {Color.GREEN, Color.YELLOW, Color.GREEN};
     private Matrix mMatrix = new Matrix();
-    private int startAngle = 0;
+    private int mStartAngle = 0;
+    private int mAlpha = 255;
+    private int mAlphaReverse = 1;
 
     //绘制光晕
     private Paint mBgArcPaint;
@@ -150,18 +148,23 @@ public class CircleHaloProgress extends View {
         super.onDraw(canvas);
         drawArc(canvas);
 
-        startAngle = ++startAngle % 360;
+        mStartAngle = ++mStartAngle % 360;
         if(mSweepGradient != null) {
-            mMatrix.setRotate(startAngle, mCenterPoint.x, mCenterPoint.y);
+            mMatrix.setRotate(mStartAngle, mCenterPoint.x, mCenterPoint.y);
             mSweepGradient.setLocalMatrix(mMatrix);
         }
 
+        mAlpha = mAlpha - 5 * mAlphaReverse;
+        if(mAlpha == 0 || mAlpha == 255) {
+            mAlphaReverse = mAlphaReverse * -1;
+        }
+        mArcPaint.setAlpha(mAlpha);
         postInvalidateDelayed(10);
     }
 
     private void drawArc(Canvas canvas) {
+        canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, mRadius - mArcWidth, mBgArcPaint);
         canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, mRadius, mArcPaint);
-        canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, mRadius, mBgArcPaint);
     }
 
     /**
