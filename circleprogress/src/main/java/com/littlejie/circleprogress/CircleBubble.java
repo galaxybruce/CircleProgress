@@ -123,7 +123,7 @@ public class CircleBubble extends View {
             ratio = ((now - startTime) * 1.0f / mDuration);
             y = maxY - (maxY + mEndBubbleRadius / 2) * ratio;
             radius = mStartBubbleRadius + (mEndBubbleRadius - mStartBubbleRadius) * ratio;
-            alpha = (int)((mEndBubbleAlpha - mStartBubbleAlpha) * ratio);
+            alpha = mStartBubbleAlpha + (int)((mEndBubbleAlpha - mStartBubbleAlpha) * ratio);
             mBubblePaint.setAlpha(alpha);
             canvas.drawCircle(x, y, radius, mBubblePaint);
         }

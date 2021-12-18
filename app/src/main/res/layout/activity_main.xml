@@ -27,7 +27,7 @@
             app:antiAlias="true"
             app:startBubbleRadius="2dp"
             app:endBubbleRadius="10dp"
-            app:startBubbleAlpha="50"
+            app:startBubbleAlpha="0"
             app:endBubbleAlpha="100"
             app:bubbleColor="#800000ff"
             app:duration="1000"
