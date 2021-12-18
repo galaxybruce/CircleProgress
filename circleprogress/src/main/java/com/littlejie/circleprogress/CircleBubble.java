@@ -15,6 +15,7 @@ import com.littlejie.circleprogress.utils.MiscUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 吹气泡
@@ -41,7 +42,7 @@ public class CircleBubble extends View {
     //气泡终点
     private Point mStartPoint;
     //气泡开始时间
-    private List<Long> mBubbleStartTimeList = new ArrayList<>();
+    private List<Long> mBubbleStartTimeList = new CopyOnWriteArrayList<>();
     private int mLastValue;
     private long mLastTime;
 
@@ -119,8 +120,12 @@ public class CircleBubble extends View {
         float ratio = 0.0f;
         int alpha = mStartBubbleAlpha;
         long now = System.currentTimeMillis();
-        for (Long startTime : mBubbleStartTimeList) {
+        List<Long> list = new ArrayList<>(mBubbleStartTimeList);
+        for (Long startTime : list) {
             ratio = ((now - startTime) * 1.0f / mDuration);
+            if(ratio > 1.0f) {
+                continue;
+            }
             y = maxY - (maxY + mEndBubbleRadius / 2) * ratio;
             radius = mStartBubbleRadius + (mEndBubbleRadius - mStartBubbleRadius) * ratio;
             alpha = mStartBubbleAlpha + (int)((mEndBubbleAlpha - mStartBubbleAlpha) * ratio);
@@ -160,7 +165,6 @@ public class CircleBubble extends View {
         }
 
         Log.i("aaaaaaaaaaaa", "value: " + value + "-- " + mBubbleStartTimeList.size());
-        postInvalidate();
     }
 
     public void reset() {
