@@ -140,8 +140,8 @@
         </attr>
     </declare-styleable>
 
-    <!-- 圆形进度条 -->
-    <declare-styleable name="CircleHaloProgressBar">
+    <!-- 闪烁圆圈光晕 -->
+    <declare-styleable name="CircleHalo">
         <attr name="antiAlias" />
         <attr name="arcWidth" />
         <attr name="arcColors" />
@@ -149,5 +149,17 @@
         <attr name="haloRadius" format="dimension" />
         <!-- 是否显示浅色水波 -->
         <attr name="shine" format="boolean" />
+    </declare-styleable>
+
+    <!-- 吹气泡 -->
+    <declare-styleable name="CircleBubble">
+        <attr name="antiAlias" />
+        <attr name="startBubbleRadius" format="dimension" />
+        <attr name="endBubbleRadius" format="dimension" />
+        <attr name="startBubbleAlpha" format="integer"/>
+        <attr name="endBubbleAlpha" format="integer"/>
+        <attr name="bubbleColor" format="color|reference" />
+        <!-- 气泡从起点到终点运行时长-->
+        <attr name="duration" format="integer"/>
     </declare-styleable>
 </resources>

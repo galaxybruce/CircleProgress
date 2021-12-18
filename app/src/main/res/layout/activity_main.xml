@@ -19,6 +19,20 @@
             android:layout_height="wrap_content"
             android:text="重置" />
 
+        <com.littlejie.circleprogress.CircleBubble
+            android:id="@+id/circle_bubble"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:antiAlias="true"
+            app:startBubbleRadius="2dp"
+            app:endBubbleRadius="10dp"
+            app:startBubbleAlpha="50"
+            app:endBubbleAlpha="100"
+            app:bubbleColor="#800000ff"
+            app:duration="1000"
+            />
+
         <com.littlejie.circleprogress.CircleProgress
             android:id="@+id/circle_progress_bar1"
             android:layout_width="wrap_content"
@@ -113,18 +127,18 @@
             app:waveHeight="30dp"
             app:waveNum="1" />
 
-        <com.littlejie.circleprogress.CircleHaloProgress
-            android:id="@+id/circle_progress_bar0"
+        <com.littlejie.circleprogress.CircleHalo
+            android:id="@+id/circle_halo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:antiAlias="true"
             app:arcWidth="2dp"
             app:arcColors="@array/gradient_arc_color"
-            app:haloRadius="0dp"
+            app:haloRadius="10dp"
             app:bgArcColor="@color/colorAccent"
             app:bgArcWidth="@dimen/small"
-            app:shine="false"
+            app:shine="true"
             />
 
     </LinearLayout>

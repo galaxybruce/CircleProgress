@@ -1,6 +1,5 @@
 package com.littlejie.circleprogress;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -18,11 +17,10 @@ import com.littlejie.circleprogress.utils.Constant;
 import com.littlejie.circleprogress.utils.MiscUtil;
 
 /**
- * 圆形进度条，类似 QQ 健康中运动步数的 UI 控件
- * Created by littlejie on 2017/2/21.
+ * 圆形光晕
  */
 
-public class CircleHaloProgress extends View {
+public class CircleHalo extends View {
 
     private Context mContext;
 
@@ -50,10 +48,7 @@ public class CircleHaloProgress extends View {
     private Point mCenterPoint;
     private float mRadius;
 
-    //属性动画
-    private ValueAnimator mAnimator;
-
-    public CircleHaloProgress(Context context, AttributeSet attrs) {
+    public CircleHalo(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
@@ -61,21 +56,20 @@ public class CircleHaloProgress extends View {
     private void init(Context context, AttributeSet attrs) {
         mContext = context;
         mDefaultSize = MiscUtil.dipToPx(mContext, Constant.DEFAULT_SIZE);
-        mAnimator = new ValueAnimator();
         mCenterPoint = new Point();
         initAttrs(attrs);
         initPaint();
     }
 
     private void initAttrs(AttributeSet attrs) {
-        TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.CircleHaloProgressBar);
+        TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.CircleHalo);
 
-        antiAlias = typedArray.getBoolean(R.styleable.CircleHaloProgressBar_antiAlias, Constant.ANTI_ALIAS);
-        mArcWidth = typedArray.getDimension(R.styleable.CircleHaloProgressBar_arcWidth, Constant.DEFAULT_ARC_WIDTH);
-        mHaloRadius = typedArray.getDimension(R.styleable.CircleHaloProgressBar_haloRadius, 10);
-        mShine = typedArray.getBoolean(R.styleable.CircleHaloProgressBar_shine, false);
+        antiAlias = typedArray.getBoolean(R.styleable.CircleHalo_antiAlias, Constant.ANTI_ALIAS);
+        mArcWidth = typedArray.getDimension(R.styleable.CircleHalo_arcWidth, Constant.DEFAULT_ARC_WIDTH);
+        mHaloRadius = typedArray.getDimension(R.styleable.CircleHalo_haloRadius, 10);
+        mShine = typedArray.getBoolean(R.styleable.CircleHalo_shine, false);
 
-        int gradientArcColors = typedArray.getResourceId(R.styleable.CircleHaloProgressBar_arcColors, 0);
+        int gradientArcColors = typedArray.getResourceId(R.styleable.CircleHalo_arcColors, 0);
         if (gradientArcColors != 0) {
             try {
                 int[] gradientColors = getResources().getIntArray(gradientArcColors);
@@ -186,20 +180,6 @@ public class CircleHaloProgress extends View {
 
     public boolean isAntiAlias() {
         return antiAlias;
-    }
-
-    private void startAnimator(float start, float end, long animTime) {
-        mAnimator = ValueAnimator.ofFloat(start, end);
-        mAnimator.setDuration(animTime);
-        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-//                mPercent = (float) animation.getAnimatedValue();
-//                mValue = mPercent * mMaxValue;
-                invalidate();
-            }
-        });
-        mAnimator.start();
     }
 
     /**

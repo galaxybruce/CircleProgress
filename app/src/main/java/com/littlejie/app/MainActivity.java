@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.littlejie.circleprogress.CircleBubble;
 import com.littlejie.circleprogress.CircleProgress;
 import com.littlejie.circleprogress.DialProgress;
 import com.littlejie.circleprogress.WaveProgress;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private CircleProgress mCircleProgress1, mCircleProgress2, mCircleProgress3;
     private DialProgress mDialProgress;
     private WaveProgress mWaveProgress;
+    private CircleBubble mCircleBubble;
     private Random mRandom;
 
     @Override
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mCircleProgress3 = (CircleProgress) findViewById(R.id.circle_progress_bar3);
         mDialProgress = (DialProgress) findViewById(R.id.dial_progress_bar);
         mWaveProgress = (WaveProgress) findViewById(R.id.wave_progress_bar);
+        mCircleBubble = (CircleBubble) findViewById(R.id.circle_bubble);
 
         mBtnResetAll.setOnClickListener(this);
         mCircleProgress1.setOnClickListener(this);
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mCircleProgress3.setOnClickListener(this);
         mDialProgress.setOnClickListener(this);
         mWaveProgress.setOnClickListener(this);
+        mCircleBubble.setOnClickListener(this);
 
         mRandom = new Random();
     }
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mCircleProgress2.reset();
                 mCircleProgress3.reset();
                 mDialProgress.reset();
+                mCircleBubble.reset();
                 break;
             case R.id.circle_progress_bar1:
                 mCircleProgress1.setValue(mRandom.nextInt((int) mCircleProgress1.getMaxValue()));
@@ -70,6 +75,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.wave_progress_bar:
                 mWaveProgress.setValue(mRandom.nextFloat() * mWaveProgress.getMaxValue());
+                break;
+            case R.id.circle_bubble:
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int n = 0;
+                        while (n <= 3000) {
+                            n = n + 100;
+                            mCircleBubble.setValue(n);
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }).start();
                 break;
         }
     }
