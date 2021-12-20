@@ -26,11 +26,11 @@
             android:layout_gravity="center_horizontal"
             app:antiAlias="true"
             app:startBubbleRadius="2dp"
-            app:endBubbleRadius="10dp"
+            app:endBubbleRadius="8dp"
             app:startBubbleAlpha="0"
             app:endBubbleAlpha="100"
             app:bubbleColor="#800000ff"
-            app:duration="500"
+            app:duration="800"
             />
 
         <com.littlejie.circleprogress.CircleProgress

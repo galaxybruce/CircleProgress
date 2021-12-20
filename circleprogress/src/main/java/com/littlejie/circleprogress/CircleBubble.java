@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 
 import com.littlejie.circleprogress.utils.Constant;
 import com.littlejie.circleprogress.utils.MiscUtil;
@@ -44,6 +45,8 @@ public class CircleBubble extends View {
     private List<Long> mBubbleStartTimeList = new CopyOnWriteArrayList<>();
     private int mLastValue;
     private long mLastTime;
+
+    private AccelerateInterpolator mAccelerateInterpolator = new AccelerateInterpolator();
 
     public CircleBubble(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -126,6 +129,7 @@ public class CircleBubble extends View {
             if(ratio > 1.0f) {
                 continue;
             }
+            ratio = mAccelerateInterpolator.getInterpolation(ratio);
             // y=起始坐标-移动距离
             y = maxY - mEndBubbleRadius / 2 - maxY * ratio;
             radius = mStartBubbleRadius + (mEndBubbleRadius - mStartBubbleRadius) * ratio;
