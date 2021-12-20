@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.littlejie.circleprogress.utils.Constant;
@@ -113,6 +112,7 @@ public class CircleBubble extends View {
     }
 
     private void drawBubble(Canvas canvas) {
+        // 最大移动距离，气泡从开始进来到完全出去，需要加上开始的气泡半径和结束时的气泡半径
         float maxY = mStartPoint.y + mStartBubbleRadius / 2 + mEndBubbleRadius / 2;
         float x = mStartPoint.x * 1.0f;
         float y = 0.0f;
@@ -126,7 +126,8 @@ public class CircleBubble extends View {
             if(ratio > 1.0f) {
                 continue;
             }
-            y = maxY - (maxY + mEndBubbleRadius / 2) * ratio;
+            // y=起始坐标-移动距离
+            y = maxY - mEndBubbleRadius / 2 - maxY * ratio;
             radius = mStartBubbleRadius + (mEndBubbleRadius - mStartBubbleRadius) * ratio;
             alpha = mStartBubbleAlpha + (int)((mEndBubbleAlpha - mStartBubbleAlpha) * ratio);
             mBubblePaint.setAlpha(alpha);
@@ -151,20 +152,10 @@ public class CircleBubble extends View {
      */
     public void setValue(int value) {
         long now = System.currentTimeMillis();
-//        if(mLastValue > 0) {
-//            int count = (int) ((((value - mLastValue) * 1.0f / (now - mLastTime)) / 3) * 0.05f);
-//            for (int i = 0; i < count; i++) {
-//                mBubbleStartTimeList.add(now + (now - mLastTime) * i / count);
-//            }
-//        }
-//        mLastValue = value;
-//        mLastTime = now;
+        mLastValue = value;
+        mLastTime = now;
 
-        for (int i = 0; i < 1; i++) {
-            mBubbleStartTimeList.add(now + 20 * i);
-        }
-
-        Log.i("aaaaaaaaaaaa", "value: " + value + "-- " + mBubbleStartTimeList.size());
+        mBubbleStartTimeList.add(now);
     }
 
     public void reset() {

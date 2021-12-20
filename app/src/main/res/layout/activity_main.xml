@@ -30,7 +30,7 @@
             app:startBubbleAlpha="0"
             app:endBubbleAlpha="100"
             app:bubbleColor="#800000ff"
-            app:duration="1000"
+            app:duration="500"
             />
 
         <com.littlejie.circleprogress.CircleProgress

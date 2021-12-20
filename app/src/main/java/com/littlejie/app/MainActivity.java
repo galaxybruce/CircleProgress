@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mCircleProgress3.reset();
                 mDialProgress.reset();
                 mCircleBubble.reset();
+                startBubble();
                 break;
             case R.id.circle_progress_bar1:
                 mCircleProgress1.setValue(mRandom.nextInt((int) mCircleProgress1.getMaxValue()));
@@ -76,23 +77,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.wave_progress_bar:
                 mWaveProgress.setValue(mRandom.nextFloat() * mWaveProgress.getMaxValue());
                 break;
-            case R.id.circle_bubble:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        int n = 0;
-                        while (n <= 3000) {
-                            n = n + 100;
-                            mCircleBubble.setValue(n);
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }).start();
-                break;
         }
+    }
+
+    private void startBubble() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int n = 0;
+                while (n <= 3000) {
+                    n = n + 100;
+                    mCircleBubble.setValue(n);
+                    try {
+                        Thread.sleep(new Random().nextInt(5) * 50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 }
