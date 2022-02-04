@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.graphics.SweepGradient;
 import android.os.Build;
 import android.text.TextPaint;
 import android.util.AttributeSet;
@@ -33,6 +35,8 @@ public class WaveProgress extends View {
     //浅色波浪方向
     private static final int L2R = 0;
     private static final int R2L = 1;
+
+    private boolean drawValue;
 
     private int mDefaultSize;
     //圆心
@@ -74,9 +78,12 @@ public class WaveProgress extends View {
     //圆环
     private Paint mCirclePaint;
     //圆环颜色
-    private int mCircleColor;
+    private SweepGradient mSweepGradient;
+    private int[] mCircleColors = {Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT};
     //背景圆环颜色
     private int mBgCircleColor;
+    //圆环
+    private Paint mBgCirclePaint;
 
     //水波路径
     private Path mWaveLimitPath;
@@ -125,6 +132,8 @@ public class WaveProgress extends View {
     private void initAttrs(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.WaveProgress);
 
+        drawValue = typedArray.getBoolean(R.styleable.CircleProgressBar_drawValue, true);
+
         antiAlias = typedArray.getBoolean(R.styleable.WaveProgress_antiAlias, true);
         mDarkWaveAnimTime = typedArray.getInt(R.styleable.WaveProgress_darkWaveAnimTime, Constant.DEFAULT_ANIM_TIME);
         mLightWaveAnimTime = typedArray.getInt(R.styleable.WaveProgress_lightWaveAnimTime, Constant.DEFAULT_ANIM_TIME);
@@ -138,7 +147,6 @@ public class WaveProgress extends View {
         mHintSize = typedArray.getDimension(R.styleable.WaveProgress_hintSize, Constant.DEFAULT_HINT_SIZE);
 
         mCircleWidth = typedArray.getDimension(R.styleable.WaveProgress_circleWidth, Constant.DEFAULT_ARC_WIDTH);
-        mCircleColor = typedArray.getColor(R.styleable.WaveProgress_circleColor, Color.GREEN);
         mBgCircleColor = typedArray.getColor(R.styleable.WaveProgress_bgCircleColor, Color.WHITE);
 
         mWaveHeight = typedArray.getDimension(R.styleable.WaveProgress_waveHeight, Constant.DEFAULT_WAVE_HEIGHT);
@@ -150,6 +158,27 @@ public class WaveProgress extends View {
 
         isR2L = typedArray.getInt(R.styleable.WaveProgress_lightWaveDirect, R2L) == R2L;
         lockWave = typedArray.getBoolean(R.styleable.WaveProgress_lockWave, false);
+
+        int gradientArcColors = typedArray.getResourceId(R.styleable.WaveProgress_circleColors, 0);
+        if (gradientArcColors != 0) {
+            try {
+                int[] gradientColors = getResources().getIntArray(gradientArcColors);
+                if (gradientColors.length == 0) {//如果渐变色为数组为0，则尝试以单色读取色值
+                    int color = getResources().getColor(gradientArcColors);
+                    mCircleColors = new int[2];
+                    mCircleColors[0] = color;
+                    mCircleColors[1] = color;
+                } else if (gradientColors.length == 1) {//如果渐变数组只有一种颜色，默认设为两种相同颜色
+                    mCircleColors = new int[2];
+                    mCircleColors[0] = gradientColors[0];
+                    mCircleColors[1] = gradientColors[0];
+                } else {
+                    mCircleColors = gradientColors;
+                }
+            } catch (Resources.NotFoundException e) {
+                throw new Resources.NotFoundException("the give resource not found.");
+            }
+        }
 
         typedArray.recycle();
     }
@@ -164,6 +193,13 @@ public class WaveProgress extends View {
         mHintPaint.setColor(mHintColor);
         // 从中间向两边绘制，不需要再次计算文字
         mHintPaint.setTextAlign(Paint.Align.CENTER);
+
+        mBgCirclePaint = new Paint();
+        mBgCirclePaint.setAntiAlias(antiAlias);
+        mBgCirclePaint.setStrokeWidth(mCircleWidth);
+        mBgCirclePaint.setColor(mBgCircleColor);
+        mBgCirclePaint.setStyle(Paint.Style.STROKE);
+        mBgCirclePaint.setStrokeCap(Paint.Cap.ROUND);
 
         mCirclePaint = new Paint();
         mCirclePaint.setAntiAlias(antiAlias);
@@ -212,6 +248,7 @@ public class WaveProgress extends View {
                 + ";圆心坐标 = " + mCenterPoint.toString()
                 + ";圆半径 = " + mRadius
                 + ";圆的外接矩形 = " + mRectF.toString());
+        updateArcPaint();
         initWavePoints();
         //开始动画
         setValue(mValue);
@@ -273,10 +310,8 @@ public class WaveProgress extends View {
         canvas.rotate(270, mCenterPoint.x, mCenterPoint.y);
         int currentAngle = (int) (360 * mPercent);
         //画背景圆环
-        mCirclePaint.setColor(mBgCircleColor);
-        canvas.drawArc(mRectF, currentAngle, 360 - currentAngle, false, mCirclePaint);
+        canvas.drawArc(mRectF, currentAngle, 360 - currentAngle, false, mBgCirclePaint);
         //画圆环
-        mCirclePaint.setColor(mCircleColor);
         canvas.drawArc(mRectF, 0, currentAngle, false, mCirclePaint);
         canvas.restore();
     }
@@ -331,19 +366,21 @@ public class WaveProgress extends View {
     private String mPercentValue;
 
     private void drawProgress(Canvas canvas) {
-        float y = mCenterPoint.y - (mPercentPaint.descent() + mPercentPaint.ascent()) / 2;
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "mPercent = " + mPercent + "; mPrePercent = " + mPrePercent);
-        }
-        if (mPrePercent == 0.0f || Math.abs(mPercent - mPrePercent) >= 0.01f) {
-            mPercentValue = String.format("%.0f%%", mPercent * 100);
-            mPrePercent = mPercent;
-        }
-        canvas.drawText(mPercentValue, mCenterPoint.x, y, mPercentPaint);
+        if(drawValue) {
+            float y = mCenterPoint.y - (mPercentPaint.descent() + mPercentPaint.ascent()) / 2;
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "mPercent = " + mPercent + "; mPrePercent = " + mPrePercent);
+            }
+            if (mPrePercent == 0.0f || Math.abs(mPercent - mPrePercent) >= 0.01f) {
+                mPercentValue = String.format("%.0f%%", mPercent * 100);
+                mPrePercent = mPercent;
+            }
+            canvas.drawText(mPercentValue, mCenterPoint.x, y, mPercentPaint);
 
-        if (mHint != null) {
-            float hy = mCenterPoint.y * 2 / 3 - (mHintPaint.descent() + mHintPaint.ascent()) / 2;
-            canvas.drawText(mHint.toString(), mCenterPoint.x, hy, mHintPaint);
+            if (mHint != null) {
+                float hy = mCenterPoint.y * 2 / 3 - (mHintPaint.descent() + mHintPaint.ascent()) / 2;
+                canvas.drawText(mHint.toString(), mCenterPoint.x, hy, mHintPaint);
+            }
         }
     }
 
@@ -372,6 +409,15 @@ public class WaveProgress extends View {
         float end = value / mMaxValue;
         Log.d(TAG, "setValue, value = " + value + ";start = " + start + "; end = " + end);
         startAnimator(start, end, mDarkWaveAnimTime);
+    }
+
+    /**
+     * 更新圆弧画笔
+     */
+    private void updateArcPaint() {
+        // 设置渐变
+        mSweepGradient = new SweepGradient(mCenterPoint.x, mCenterPoint.y, mCircleColors, null);
+        mCirclePaint.setShader(mSweepGradient);
     }
 
     private void startAnimator(final float start, float end, long animTime) {

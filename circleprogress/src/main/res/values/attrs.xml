@@ -68,6 +68,7 @@
     </declare-styleable>
 
     <declare-styleable name="DialProgress">
+        <attr name="drawValue" />
         <attr name="antiAlias" />
         <attr name="startAngle" />
         <attr name="sweepAngle" />
@@ -105,6 +106,7 @@
     </declare-styleable>
 
     <declare-styleable name="WaveProgress">
+        <attr name="drawValue" />
         <!-- 是否开启抗锯齿 -->
         <attr name="antiAlias" />
         <!-- 深色水波动画时间 -->
@@ -124,7 +126,7 @@
         <!-- 圆环宽度 -->
         <attr name="circleWidth" format="dimension" />
         <!-- 圆环颜色 -->
-        <attr name="circleColor" format="color|reference" />
+        <attr name="circleColors" format="color|reference" />
         <!-- 背景圆环颜色 -->
         <attr name="bgCircleColor" format="color|reference" />
         <!-- 锁定水波不随圆环进度改变，默认锁定在50%处 -->
