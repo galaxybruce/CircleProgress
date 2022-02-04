@@ -17,4 +17,11 @@
         <item>@color/yellow</item>
         <item>@color/green</item>
     </integer-array>
+
+    <color name="dial_arc_color">#FF142E7B</color>
+    <color name="dial_color">#00FAFF</color>
+    <integer-array name="dial_gradient_arc_color">
+        <item>@color/dial_arc_color</item>
+        <item>@color/dial_arc_color</item>
+    </integer-array>
 </resources>

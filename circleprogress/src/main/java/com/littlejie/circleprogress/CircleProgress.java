@@ -29,6 +29,7 @@ public class CircleProgress extends View {
     private static final String TAG = CircleProgress.class.getSimpleName();
     private Context mContext;
 
+    private boolean drawValue;
     //默认大小
     private int mDefaultSize;
     //是否开启抗锯齿
@@ -101,6 +102,7 @@ public class CircleProgress extends View {
     private void initAttrs(AttributeSet attrs) {
         TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.CircleProgressBar);
 
+        drawValue = typedArray.getBoolean(R.styleable.CircleProgressBar_drawValue, true);
         antiAlias = typedArray.getBoolean(R.styleable.CircleProgressBar_antiAlias, Constant.ANTI_ALIAS);
 
         mHint = typedArray.getString(R.styleable.CircleProgressBar_hint);
@@ -253,17 +255,19 @@ public class CircleProgress extends View {
      * @param canvas
      */
     private void drawText(Canvas canvas) {
-        // 计算文字宽度，由于Paint已设置为居中绘制，故此处不需要重新计算
-        // float textWidth = mValuePaint.measureText(mValue.toString());
-        // float x = mCenterPoint.x - textWidth / 2;
-        canvas.drawText(String.format(mPrecisionFormat, mValue), mCenterPoint.x, mValueOffset, mValuePaint);
+        if(drawValue) {
+            // 计算文字宽度，由于Paint已设置为居中绘制，故此处不需要重新计算
+            // float textWidth = mValuePaint.measureText(mValue.toString());
+            // float x = mCenterPoint.x - textWidth / 2;
+            canvas.drawText(String.format(mPrecisionFormat, mValue), mCenterPoint.x, mValueOffset, mValuePaint);
 
-        if (mHint != null) {
-            canvas.drawText(mHint.toString(), mCenterPoint.x, mHintOffset, mHintPaint);
-        }
+            if (mHint != null) {
+                canvas.drawText(mHint.toString(), mCenterPoint.x, mHintOffset, mHintPaint);
+            }
 
-        if (mUnit != null) {
-            canvas.drawText(mUnit.toString(), mCenterPoint.x, mUnitOffset, mUnitPaint);
+            if (mUnit != null) {
+                canvas.drawText(mUnit.toString(), mCenterPoint.x, mUnitOffset, mUnitPaint);
+            }
         }
     }
 

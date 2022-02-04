@@ -2,6 +2,7 @@
 <resources>
     <!-- 是否开启抗锯齿 -->
     <attr name="antiAlias" format="boolean" />
+    <attr name="drawValue" format="boolean" />
     <!-- 圆弧起始角度，3点钟方向为0，顺时针递增，小于0或大于360进行取余 -->
     <attr name="startAngle" format="float" />
     <!-- 圆弧度数 -->
@@ -38,6 +39,7 @@
 
     <!-- 圆形进度条 -->
     <declare-styleable name="CircleProgressBar">
+        <attr name="drawValue" />
         <attr name="antiAlias" />
         <attr name="startAngle" />
         <attr name="sweepAngle" />
@@ -90,6 +92,10 @@
         <attr name="dialWidth" format="dimension|reference" />
         <!-- 刻度之间的间隔 -->
         <attr name="dialIntervalDegree" format="integer" />
+        <!-- 附加宽度间隔角度 -->
+        <attr name="dialAdditionWidthDegree" format="integer" />
+        <!-- 附加宽度 -->
+        <attr name="dialAdditionWidth" format="dimension|reference" />
         <!-- 圆弧颜色， -->
         <attr name="arcColors" />
         <!-- 背景圆弧线颜色 -->

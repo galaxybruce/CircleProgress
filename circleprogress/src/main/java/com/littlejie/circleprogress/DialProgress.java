@@ -81,6 +81,9 @@ public class DialProgress extends View {
     private float mDialWidth;
     private int mDialColor;
 
+    private float mDialAdditionWidth;
+    private int mDialAdditionWidthDegree;
+
     private int mDefaultSize;
 
     public DialProgress(Context context, AttributeSet attrs) {
@@ -130,6 +133,9 @@ public class DialProgress extends View {
         mDialColor = typedArray.getColor(R.styleable.DialProgress_dialColor, Color.WHITE);
 
         mTextOffsetPercentInRadius = typedArray.getFloat(R.styleable.DialProgress_textOffsetPercentInRadius, 0.33f);
+
+        mDialAdditionWidth = typedArray.getDimension(R.styleable.DialProgress_dialAdditionWidth, 0);
+        mDialAdditionWidthDegree = typedArray.getInt(R.styleable.DialProgress_dialAdditionWidthDegree, 0);
 
         int gradientArcColors = typedArray.getResourceId(R.styleable.DialProgress_arcColors, 0);
         if (gradientArcColors != 0) {
@@ -272,8 +278,12 @@ public class DialProgress extends View {
         int total = (int) (mSweepAngle / mDialIntervalDegree);
         canvas.save();
         canvas.rotate(mStartAngle, mCenterPoint.x, mCenterPoint.y);
+        float additionWith = 0.0f;
         for (int i = 0; i <= total; i++) {
-            canvas.drawLine(mCenterPoint.x + mRadius, mCenterPoint.y, mCenterPoint.x + mRadius + mArcWidth, mCenterPoint.y, mDialPaint);
+            if(mDialAdditionWidthDegree > 0) {
+                additionWith = i * mDialIntervalDegree % mDialAdditionWidthDegree == 0 ? mDialAdditionWidth : 0;
+            }
+            canvas.drawLine(mCenterPoint.x + mRadius, mCenterPoint.y, mCenterPoint.x + mRadius + mArcWidth + additionWith, mCenterPoint.y, mDialPaint);
             canvas.rotate(mDialIntervalDegree, mCenterPoint.x, mCenterPoint.y);
         }
         canvas.restore();
