@@ -100,6 +100,7 @@ public class WaveProgress extends View {
     private int[] mDarkWaveColors;
     //浅色水波颜色
     private int[] mLightWaveColors;
+    private boolean mShowLightWave;
 
     //深色水波贝塞尔曲线上的起始点、控制点
     private Point[] mDarkPoints;
@@ -153,6 +154,8 @@ public class WaveProgress extends View {
 
         mWaveHeight = typedArray.getDimension(R.styleable.WaveProgress_waveHeight, Constant.DEFAULT_WAVE_HEIGHT);
         mWaveNum = typedArray.getInt(R.styleable.WaveProgress_waveNum, 1);
+
+        mShowLightWave = typedArray.getBoolean(R.styleable.WaveProgress_showLightWave, true);
 
         int gradientDarkWaveColors = typedArray.getResourceId(R.styleable.WaveProgress_darkWaveColors, 0);
         if (gradientDarkWaveColors != 0) {
@@ -396,6 +399,7 @@ public class WaveProgress extends View {
      * @param canvas
      */
     private void drawLightWave(Canvas canvas) {
+        if(mShowLightWave) {
 //        if(mLightWaveColors.length == 1) {
 //            mWavePaint.setColor(mLightWaveColors[0]);
 //            mWavePaint.setShader(null);
@@ -405,8 +409,9 @@ public class WaveProgress extends View {
                     mLightWaveColors[0], mLightWaveColors[1], Shader.TileMode.CLAMP);
             mWavePaint.setShader(linearGradient);
 //        }
-        //从右向左的水波位移应该被减去
-        drawWave(canvas, mWavePaint, mLightPoints, isR2L ? -mLightWaveOffset : mLightWaveOffset);
+            //从右向左的水波位移应该被减去
+            drawWave(canvas, mWavePaint, mLightPoints, isR2L ? -mLightWaveOffset : mLightWaveOffset);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
