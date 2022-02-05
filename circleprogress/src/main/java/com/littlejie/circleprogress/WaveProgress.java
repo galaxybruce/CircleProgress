@@ -8,10 +8,12 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.SweepGradient;
 import android.os.Build;
 import android.text.TextPaint;
@@ -95,9 +97,9 @@ public class WaveProgress extends View {
     //深色水波
     private Paint mWavePaint;
     //深色水波颜色
-    private int mDarkWaveColor;
+    private int[] mDarkWaveColors;
     //浅色水波颜色
-    private int mLightWaveColor;
+    private int[] mLightWaveColors;
 
     //深色水波贝塞尔曲线上的起始点、控制点
     private Point[] mDarkPoints;
@@ -151,10 +153,64 @@ public class WaveProgress extends View {
 
         mWaveHeight = typedArray.getDimension(R.styleable.WaveProgress_waveHeight, Constant.DEFAULT_WAVE_HEIGHT);
         mWaveNum = typedArray.getInt(R.styleable.WaveProgress_waveNum, 1);
-        mDarkWaveColor = typedArray.getColor(R.styleable.WaveProgress_darkWaveColor,
-                getResources().getColor(android.R.color.holo_blue_dark));
-        mLightWaveColor = typedArray.getColor(R.styleable.WaveProgress_lightWaveColor,
-                getResources().getColor(android.R.color.holo_green_light));
+
+        int gradientDarkWaveColors = typedArray.getResourceId(R.styleable.WaveProgress_darkWaveColors, 0);
+        if (gradientDarkWaveColors != 0) {
+            try {
+                int[] gradientColors = getResources().getIntArray(gradientDarkWaveColors);
+                if (gradientColors.length == 0) {//如果渐变色为数组为0，则尝试以单色读取色值
+                    int color = getResources().getColor(gradientDarkWaveColors);
+                    mDarkWaveColors = new int[2];
+                    mDarkWaveColors[0] = color;
+                    mDarkWaveColors[1] = color;
+                } else if (gradientColors.length == 1) {//如果渐变数组只有一种颜色，默认设为两种相同颜色
+                    mDarkWaveColors = new int[2];
+                    mDarkWaveColors[0] = gradientColors[0];
+                    mDarkWaveColors[1] = gradientColors[1];
+                } else {
+                    mDarkWaveColors = gradientColors;
+                }
+            } catch (Resources.NotFoundException e) {
+                try {
+                    int color = typedArray.getColor(R.styleable.WaveProgress_darkWaveColors,
+                            getResources().getColor(android.R.color.holo_green_dark));
+                    mDarkWaveColors = new int[2];
+                    mDarkWaveColors[0] = color;
+                    mDarkWaveColors[1] = color;
+                } catch (Exception exception) {
+                    throw new Resources.NotFoundException("the give resource for darkWaveColors not found.");
+                }
+            }
+        }
+
+        int gradientLightWaveColors = typedArray.getResourceId(R.styleable.WaveProgress_lightWaveColors, 0);
+        if (gradientLightWaveColors != 0) {
+            try {
+                int[] gradientColors = getResources().getIntArray(gradientLightWaveColors);
+                if (gradientColors.length == 0) {//如果渐变色为数组为0，则尝试以单色读取色值
+                    int color = getResources().getColor(gradientLightWaveColors);
+                    mLightWaveColors = new int[2];
+                    mLightWaveColors[0] = color;
+                    mLightWaveColors[1] = color;
+                } else if (gradientColors.length == 1) {//如果渐变数组只有一种颜色，默认设为两种相同颜色
+                    mLightWaveColors = new int[2];
+                    mLightWaveColors[0] = gradientColors[0];
+                    mLightWaveColors[1] = gradientColors[0];
+                } else {
+                    mLightWaveColors = gradientColors;
+                }
+            } catch (Resources.NotFoundException e) {
+                try {
+                    int color = typedArray.getColor(R.styleable.WaveProgress_lightWaveColors,
+                            getResources().getColor(android.R.color.holo_green_light));
+                    mLightWaveColors = new int[2];
+                    mLightWaveColors[0] = color;
+                    mLightWaveColors[1] = color;
+                } catch (Exception exception) {
+                    throw new Resources.NotFoundException("the give resource for lightWaveColors not found.");
+                }
+            }
+        }
 
         isR2L = typedArray.getInt(R.styleable.WaveProgress_lightWaveDirect, R2L) == R2L;
         lockWave = typedArray.getBoolean(R.styleable.WaveProgress_lockWave, false);
@@ -322,7 +378,15 @@ public class WaveProgress extends View {
      * @param canvas
      */
     private void drawDarkWave(Canvas canvas) {
-        mWavePaint.setColor(mDarkWaveColor);
+//        if(mDarkWaveColors.length == 1) {
+//            mWavePaint.setColor(mDarkWaveColors[0]);
+//            mWavePaint.setShader(null);
+//        } else {
+            LinearGradient linearGradient = new LinearGradient(
+                    0, mRadius * 2, 0, mRadius * 2 * (1 - mPercent),
+                    mDarkWaveColors[0], mDarkWaveColors[1], Shader.TileMode.CLAMP);
+            mWavePaint.setShader(linearGradient);
+//        }
         drawWave(canvas, mWavePaint, mDarkPoints, mDarkWaveOffset);
     }
 
@@ -332,7 +396,15 @@ public class WaveProgress extends View {
      * @param canvas
      */
     private void drawLightWave(Canvas canvas) {
-        mWavePaint.setColor(mLightWaveColor);
+//        if(mLightWaveColors.length == 1) {
+//            mWavePaint.setColor(mLightWaveColors[0]);
+//            mWavePaint.setShader(null);
+//        } else {
+            LinearGradient linearGradient = new LinearGradient(
+                    0, mRadius * 2, 0, mRadius * 2 * (1 - mPercent),
+                    mLightWaveColors[0], mLightWaveColors[1], Shader.TileMode.CLAMP);
+            mWavePaint.setShader(linearGradient);
+//        }
         //从右向左的水波位移应该被减去
         drawWave(canvas, mWavePaint, mLightPoints, isR2L ? -mLightWaveOffset : mLightWaveOffset);
     }

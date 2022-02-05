@@ -24,4 +24,9 @@
         <item>@color/dial_arc_color</item>
         <item>@color/dial_arc_color</item>
     </integer-array>
+
+    <integer-array name="wave_gradient_light_color">
+        <item>@color/green</item>
+        <item>@color/yellow</item>
+    </integer-array>
 </resources>
